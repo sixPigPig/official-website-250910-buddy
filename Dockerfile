@@ -8,7 +8,9 @@ WORKDIR /app
 
 # 复制 package.json 和 package-lock.json
 COPY package*.json ./
-RUN npm ci --only=production
+
+# 安装所有依赖（包括开发依赖，用于构建）
+RUN npm ci
 
 # 构建阶段
 FROM base AS builder
@@ -19,6 +21,13 @@ COPY . .
 # 构建应用
 RUN npm run build
 
+# 生产依赖阶段
+FROM base AS prod-deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
 # 运行阶段
 FROM base AS runner
 WORKDIR /app
@@ -28,6 +37,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# 复制生产依赖
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=prod-deps /app/package*.json ./
 
 # 复制构建产物
 COPY --from=builder /app/public ./public

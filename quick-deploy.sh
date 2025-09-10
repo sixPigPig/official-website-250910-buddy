@@ -61,11 +61,13 @@ cleanup_old_deployment() {
 # 构建 Docker 镜像
 build_image() {
     echo -e "${YELLOW}📦 构建 Docker 镜像...${NC}"
+    echo -e "${BLUE}这可能需要几分钟时间，请耐心等待...${NC}"
     
-    if docker build -t $IMAGE_NAME:latest .; then
+    if docker build -t $IMAGE_NAME:latest . --no-cache; then
         echo -e "${GREEN}✅ Docker 镜像构建成功${NC}"
     else
         echo -e "${RED}❌ Docker 镜像构建失败${NC}"
+        echo -e "${YELLOW}💡 提示：请检查网络连接和服务器内存是否足够${NC}"
         exit 1
     fi
 }
