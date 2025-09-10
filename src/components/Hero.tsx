@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, useAnimation, useInView } from 'framer-motion'
 import { Zap, Play, Rocket, Building2, Users, Star, ChevronDown, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import type { Variants } from 'framer-motion'
 
 const stats = [
   { number: "500+", label: "成功项目", icon: Rocket },
@@ -60,7 +61,7 @@ export default function Hero() {
     }
   }, [controls, isInView])
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -71,13 +72,13 @@ export default function Hero() {
     }
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 12
       }
