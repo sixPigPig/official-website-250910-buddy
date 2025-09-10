@@ -42,8 +42,8 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=prod-deps /app/package*.json ./
 
-# 复制构建产物
-COPY --from=builder /app/public ./public
+# 复制构建产物（无 public 目录时跳过）
+# 项目当前没有 public 目录，移除此行以避免 COPY 源不存在导致构建失败
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
