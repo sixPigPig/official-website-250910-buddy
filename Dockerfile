@@ -3,7 +3,7 @@ FROM node:18-alpine AS base
 
 # 安装依赖阶段
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.cloud.tencent.com/g' /etc/apk/repositories && apk add --no-cache libc6-compat
 WORKDIR /app
 
 # 复制 package.json 和 package-lock.json
@@ -23,7 +23,7 @@ RUN npm run build
 
 # 生产依赖阶段
 FROM base AS prod-deps
-RUN apk add --no-cache libc6-compat
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.cloud.tencent.com/g' /etc/apk/repositories && apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
