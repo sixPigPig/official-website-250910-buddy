@@ -79,7 +79,7 @@ run_container() {
     docker run -d \
         --name $CONTAINER_NAME \
         --restart unless-stopped \
-        -p 80:$PORT \
+        -p 81:$PORT \
         -e NODE_ENV=production \
         $IMAGE_NAME:latest
     
